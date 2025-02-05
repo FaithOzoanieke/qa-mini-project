@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// ✅ Fix the API Base URL using environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
 
 export type SignupData = {
@@ -27,17 +26,19 @@ export const signupUser = async (data: SignupData): Promise<SignupResponse | nul
       },
     });
 
-    console.log("🟢 Signup Success:", response.data);
+    console.log("Signup Success:", response.data);
     return response.data;
   } catch (error: any) {
-    console.error("🔴 Signup failed:", error.response?.data || error.message);
+    console.error("Signup failed:", error.response?.data || error.message);
     return null;
   }
 };
 
 
-const LOGIN_URL = import.meta.env.VITE_API_BASE_URL || "https:qa-test-9di7.onrender.com/auth/login"
 
+
+
+const LOGIN_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
 
 export type LoginData = {
   username: string;
@@ -45,8 +46,7 @@ export type LoginData = {
 };
 
 export type LoginResponse = {
-  accessToken: string; 
-  // Change from `token` to `accessToken`
+  accessToken: string;
   user: {
     id: string;
     username: string;
@@ -55,8 +55,10 @@ export type LoginResponse = {
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse | null> => {
   try {
-    console.log("Sending login request to:", LOGIN_URL);
-    console.log("Request Body:", data);
+    const LOGIN_URL = `${API_BASE_URL}/auth/login`; 
+
+    console.log("🔵 Sending login request to:", LOGIN_URL);
+    console.log("📨 Request Body:", data);
 
     const response = await axios.post<LoginResponse>(LOGIN_URL, data, {
       headers: {
@@ -75,8 +77,8 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse | null> 
     }
 
     return response.data;
-  } catch (error) {
-    console.error("Login failed:", error);
-    throw new Error("Login failed. Please try again.");
+  } catch (error: any) {
+    console.error("Login failed:", error.response?.data || error.message);
+    return null;
   }
 };
