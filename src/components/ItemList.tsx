@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, Edit, Trash, Plus } from "lucide-react";
 
-const BASE_URL = "https://qa-test-9di7.onrender.com/items?join=user";
+// const BASE_URL = "https://qa-test-9di7.onrender.com/items?join=user";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
+
 
 
 export type Item = {
@@ -34,7 +36,7 @@ const ItemList = () => {
           return;
         }
 
-        const response = await axios.get<Item[]>(BASE_URL, {
+        const response = await axios.get<Item[]>(`${BASE_URL}items?join=user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -59,7 +61,8 @@ const ItemList = () => {
 
       if (!token) throw new Error("Unauthorized. Please log in.");
 
-      await axios.delete(`https://qa-test-9di7.onrender.com/items/${id}`, {
+      await axios.delete(import.meta.env.VITE_API_BASE_URL ||`https://qa-test-9di7.onrender.com/items/${id}`, {
+
         
         headers: { Authorization: `Bearer ${token}` },
       });
