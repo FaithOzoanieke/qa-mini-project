@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 // const BASE_URL = import.meta.env.VITE_BASE_URL + "/items";
-const BASE_URL  = import.meta.env.VITE_API_BASE_URL || "https:qa-test-9di7.onrender.com/items"
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
 
 
 
