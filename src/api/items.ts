@@ -1,148 +1,54 @@
-import axios from "axios"; 
+import axios from "axios";
 
 
-// const BASE_URL = import.meta.env.VITE_BASE_URL + "/items";
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
+const BASE_URL = `${API_BASE_URL}/items`; // 
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
+});
 
 
-
-
-export type ItemData = {
-  name: string;
-  description: string;
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("Unauthorized: Please log in again.");
+  return { Authorization: `Bearer ${token}` };
 };
 
-export type ItemResponse = {
-  id: string;
-  name: string;
-  description: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-};
 
-// ✅ Function to Create an Item
-export const createItem = async (data: ItemData): Promise<ItemResponse | null> => {
+export const createItem = async (data: { name: string; description: string }) => {
   try {
-    const token = localStorage.getItem("authToken");
+    console.log("Sending POST request to:", `${BASE_URL}`);
 
-    if (!token) throw new Error("Unauthorized: Please log in again.");
+    const response = await api.post("/", data, { headers: getAuthHeaders() });
 
-    const response = await axios.post<ItemResponse>(BASE_URL, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
+    console.log("Item Created:", response.data);
     return response.data;
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      throw new Error(err.response?.data?.message || "Failed to create item. Please try again.");
-    }
-    throw new Error("An unknown error occurred.");
+  } catch (err) {
+    console.error("Create Item Error:", err);
+    throw new Error("Failed to create item. Please try again.");
   }
 };
 
-// ✅ Function to Fetch All Items
-export const fetchItems = async (): Promise<ItemResponse[]> => {
+//  Function to Fetch All Items
+export const fetchItems = async () => {
   try {
-    const token = localStorage.getItem("authToken");
-
-    if (!token) throw new Error("Unauthorized: Please log in again.");
-
-    const response = await axios.get<ItemResponse[]>(`${BASE_URL}?join=user`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
+    const response = await api.get("?join=user", { headers: getAuthHeaders() });
     return response.data;
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      throw new Error(err.response?.data?.message || "Failed to load items.");
-    }
-    throw new Error("An unknown error occurred.");
+  } catch (err) {
+    console.error("Fetch Items Error:", err);
+    throw new Error("Failed to load items.");
   }
 };
 
-// ✅ Function to Delete an Item
-export const deleteItem = async (id: string): Promise<void> => {
+// Function to Delete an Item
+export const deleteItem = async (id: string) => {
   try {
-    const token = localStorage.getItem("authToken");
-
-    if (!token) throw new Error("Unauthorized: Please log in again.");
-
-    await axios.delete(`${BASE_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    console.log(`✅ Item ${id} deleted successfully`);
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      throw new Error(err.response?.data?.message || "Failed to delete item.");
-    }
-    throw new Error("An unknown error occurred.");
+    await api.delete(`/${id}`, { headers: getAuthHeaders() });
+    console.log(`Item ${id} deleted successfully`);
+  } catch (err) {
+    console.error("Delete Item Error:", err);
+    throw new Error("Failed to delete item.");
   }
 };
-
-
-
-// ✅ Function to Fetch a Single Item by ID
-export type Item = {
-    id: string;
-    name: string;
-    description: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string | null;
-    // user?: {
-    //   id: string;
-    //   username: string;
-    // };
-  };
-  
-  // ✅ Function to Fetch a Single Item by ID
-  export const fetchItemById = async (id: string): Promise<Item | null> => {
-    try {
-      const token = localStorage.getItem("authToken");
-  
-      if (!token) throw new Error("Unauthorized: Please log in again.");
-  
-      const response = await axios.get<Item>(`${BASE_URL}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      return response.data;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        throw new Error(err.response?.data?.message || "Failed to fetch item.");
-      }
-      throw new Error("An unknown error occurred.");
-    }
-  };
-  
-
-  // ✅ Function to Update an Item
-export const updateItem = async (id: string, data: ItemData): Promise<ItemResponse | null> => {
-    try {
-      const token = localStorage.getItem("authToken");
-  
-      if (!token) throw new Error("Unauthorized: Please log in again.");
-  
-      const response = await axios.patch<ItemResponse>(`${BASE_URL}/${id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      return response.data;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        throw new Error(err.response?.data?.message || "Failed to update item.");
-      }
-      throw new Error("An unknown error occurred.");
-    }
-  };
-  

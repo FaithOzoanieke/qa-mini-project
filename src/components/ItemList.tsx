@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { fetchItems, deleteItem } from "../api/items"; 
 import { Eye, Edit, Trash, Plus } from "lucide-react";
-
-// const BASE_URL = "https://qa-test-9di7.onrender.com/items?join=user";
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
-
-
 
 export type Item = {
   id: string;
@@ -25,51 +20,38 @@ const ItemList = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Fetch items with user info
   useEffect(() => {
-    const fetchItems = async () => {
+    const loadItems = async () => {
       try {
-        const token = localStorage.getItem("authToken");
+        setLoading(true); 
 
-        if (!token) {
-          setError("Unauthorized. Please log in.");
-          return;
-        }
+        const data = await fetchItems(); 
+        setItems(data);
+        setError(null); 
+        // Reset error state on success
 
-        const response = await axios.get<Item[]>(`${BASE_URL}items?join=user`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setItems(response.data);
+        console.log("Items loaded:", data);
       } catch (err) {
         console.error("Fetch Error:", err);
         setError("Failed to load items. Please try again.");
       } finally {
-        setLoading(false);
+        setLoading(false); 
+        // Ensure loading state is cleared
       }
     };
 
-    fetchItems();
+    loadItems();
   }, []);
 
-  // Handle delete action
+  
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
 
     try {
-      const token = localStorage.getItem("authToken");
-
-      if (!token) throw new Error("Unauthorized. Please log in.");
-
-      await axios.delete(import.meta.env.VITE_API_BASE_URL ||`https://qa-test-9di7.onrender.com/items/${id}`, {
-
-        
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      await deleteItem(id); 
       setItems((prev) => prev.filter((item) => item.id !== id));
       console.log(`Item ${id} deleted successfully`);
-    } catch (err: unknown) {
+    } catch (err) {
       console.error("Delete Error:", err);
       setError("Failed to delete item. Please try again.");
     }
@@ -102,18 +84,10 @@ const ItemList = () => {
             <tbody>
               {items.map((item, index) => (
                 <tr key={item.id} className="text-center hover:bg-gray-100">
-                  <td className="border border-gray-300 px-4 py-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.name}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.description}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.user ? item.user.username : "Unknown"}
-                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.name}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.description}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.user ? item.user.username : "Unknown"}</td>
                   <td className="border border-gray-300 px-4 py-2 space-x-2">
                     {/* View Button */}
                     <button
