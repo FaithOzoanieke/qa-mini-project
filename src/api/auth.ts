@@ -36,7 +36,7 @@ export const signupUser = async (data: SignupData): Promise<SignupResponse | nul
 };
 
 
-const LOGIN_URL = "https:qa-test-9di7.onrender.com/auth/login"
+const LOGIN_URL = import.meta.env.VITE_API_BASE_URL || "https:qa-test-9di7.onrender.com/auth/login"
 
 
 export type LoginData = {
