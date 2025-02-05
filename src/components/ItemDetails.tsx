@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchItemById, Item } from "../api/items";
+import { fetchItemById, ItemResponse } from "../api/items";
 
 const ItemDetails = () => {
   const { id } = useParams<{ id: string }>(); 
   // Get item ID from URL
-  const [item, setItem] = useState<Item | null>(null);
+  const [item, setItem] = useState<ItemResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
