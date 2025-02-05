@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, Edit, Trash, Plus } from "lucide-react";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL + "/items?join=user";
+const BASE_URL = "https:qa-test-9di7.onrender.com/items?join=user";
 
 export type Item = {
   id: string;
@@ -58,8 +58,7 @@ const ItemList = () => {
 
       if (!token) throw new Error("Unauthorized. Please log in.");
 
-      
-      await axios.delete(import.meta.env.VITE_BASE_URL + `/items/${id}`, {
+      await axios.delete(`https:qa-test-9di7.onrender.com/items/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -90,9 +89,7 @@ const ItemList = () => {
               <tr className="bg-gray-200">
                 <th className="border border-gray-300 px-4 py-2">SN</th>
                 <th className="border border-gray-300 px-4 py-2">Name</th>
-                <th className="border border-gray-300 px-4 py-2">
-                  Description
-                </th>
+                <th className="border border-gray-300 px-4 py-2">Description</th>
                 <th className="border border-gray-300 px-4 py-2">Created By</th>
                 <th className="border border-gray-300 px-4 py-2">Action</th>
               </tr>
@@ -109,35 +106,33 @@ const ItemList = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {item.description}
                   </td>
-
-                  {/* Display username (if available) */}
                   <td className="border border-gray-300 px-4 py-2">
                     {item.user ? item.user.username : "Unknown"}
                   </td>
-
                   <td className="border border-gray-300 px-4 py-2 space-x-2">
-                    {/* View */}
+                    {/* View Button */}
                     <button
                       onClick={() => navigate(`/items/${item.id}`)}
                       className="text-blue-500 hover:text-blue-700"
+                      aria-label="View Item"
                     >
-                      <Eye />
+                      <Eye aria-hidden="true" />
                     </button>
-
-                    {/* Edit */}
+                    {/* Edit Button */}
                     <button
                       onClick={() => navigate(`/edit-item/${item.id}`)}
                       className="text-yellow-500 hover:text-yellow-700"
+                      aria-label="Edit Item"
                     >
-                      <Edit />
+                      <Edit aria-hidden="true" />
                     </button>
-
-                    {/* Delete */}
+                    {/* Delete Button */}
                     <button
                       onClick={() => handleDelete(item.id)}
                       className="text-red-500 hover:text-red-700"
+                      aria-label="Delete Item"
                     >
-                      <Trash />
+                      <Trash aria-hidden="true" />
                     </button>
                   </td>
                 </tr>
@@ -150,8 +145,10 @@ const ItemList = () => {
         <button
           onClick={() => navigate("/create-item")}
           className="mt-4 w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition flex items-center justify-center"
+          aria-label="Create New Item"
         >
-          <Plus className="mr-2" /> Create New Item
+          <Plus aria-hidden="true" className="mr-2" />
+          <span>Create New Item</span>
         </button>
       </div>
     </div>

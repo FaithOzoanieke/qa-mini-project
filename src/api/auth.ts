@@ -1,7 +1,10 @@
 import axios from "axios";
 
-// const BASE_URL = "https://qa-test-9di7.onrender.com/auth/signup";
-const BASE_URL = import.meta.env.VITE_BASE_URL + "/auth/signup";
+// const BASE_URL = import.meta.env.VITE_BASE_URL + "/auth/signup";
+// const BASE_URL = (import.meta.env.VITE_BASE_URL || globalThis.import_meta_env?.VITE_BASE_URL) + "/auth/signup"
+// const BASE_URL = (process.env.VITE_BASE_URL || "http://localhost:3000") + "/auth/signup"
+const BASE_URL  = "https:qa-test-9di7.onrender.com/auth/signup"
+
 
 export type SignupData = {
   username: string;
@@ -33,8 +36,12 @@ export const signupUser = async (data: SignupData): Promise<SignupResponse | nul
 
 
 
-// const LOGIN_URL = "https://qa-test-9di7.onrender.com/auth/login";
-const LOGIN_URL = import.meta.env.VITE_BASE_URL + "/auth/login";
+
+// const LOGIN_URL = (import.meta.env.VITE_BASE_URL || globalThis.import_meta_env?.VITE_BASE_URL) + "/auth/login";
+// const LOGIN_URL = (process.env.VITE_BASE_URL || "http://localhost:3000") + "/auth/login"
+const LOGIN_URL = "https:qa-test-9di7.onrender.com/auth/login"
+
+
 
 export type LoginData = {
   username: string;
@@ -52,8 +59,8 @@ export type LoginResponse = {
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse | null> => {
   try {
-    console.log("📡 Sending login request to:", LOGIN_URL);
-    console.log("📨 Request Body:", data);
+    console.log("Sending login request to:", LOGIN_URL);
+    console.log("Request Body:", data);
 
     const response = await axios.post<LoginResponse>(LOGIN_URL, data, {
       headers: {

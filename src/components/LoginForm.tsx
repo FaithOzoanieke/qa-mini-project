@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react"; // Import React explicitly
 import { useForm } from "react-hook-form";
 import { loginUser, LoginData } from "../api/auth";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +13,8 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate(); 
-  
-  // Initialize navigation
 
+  // Initialize navigation
   const onSubmit = async (data: LoginData) => {
     setLoading(true);
     setMessage(null);
