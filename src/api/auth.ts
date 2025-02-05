@@ -1,8 +1,5 @@
 import axios from "axios";
 
-// const BASE_URL = import.meta.env.VITE_BASE_URL + "/auth/signup";
-// const BASE_URL = (import.meta.env.VITE_BASE_URL || globalThis.import_meta_env?.VITE_BASE_URL) + "/auth/signup"
-// const BASE_URL = (process.env.VITE_BASE_URL || "http://localhost:3000") + "/auth/signup"
 const BASE_URL  = "https:qa-test-9di7.onrender.com/auth/signup"
 
 
@@ -35,12 +32,7 @@ export const signupUser = async (data: SignupData): Promise<SignupResponse | nul
 };
 
 
-
-
-// const LOGIN_URL = (import.meta.env.VITE_BASE_URL || globalThis.import_meta_env?.VITE_BASE_URL) + "/auth/login";
-// const LOGIN_URL = (process.env.VITE_BASE_URL || "http://localhost:3000") + "/auth/login"
 const LOGIN_URL = "https:qa-test-9di7.onrender.com/auth/login"
-
 
 
 export type LoginData = {
