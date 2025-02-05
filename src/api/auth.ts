@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE_URL  = "https:qa-test-9di7.onrender.com/auth/signup"
-
+// ✅ Fix the API Base URL using environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://qa-test-9di7.onrender.com";
 
 export type SignupData = {
   username: string;
@@ -19,14 +19,18 @@ export type SignupResponse = {
 
 export const signupUser = async (data: SignupData): Promise<SignupResponse | null> => {
   try {
-    const response = await axios.post<SignupResponse>(BASE_URL, data, {
+    console.log("🔵 Sending Signup Request to:", `${API_BASE_URL}/auth/signup`);
+
+    const response = await axios.post<SignupResponse>(`${API_BASE_URL}/auth/signup`, data, {
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    console.log("🟢 Signup Success:", response.data);
     return response.data;
-  } catch (error) {
-    console.error("Signup failed:", error);
+  } catch (error: any) {
+    console.error("🔴 Signup failed:", error.response?.data || error.message);
     return null;
   }
 };
